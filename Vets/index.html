@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAXMONEY — Personal Finance</title>
+  <style>
+    :root {
+      --red: #e53945;
+      --red-dark: #c92332;
+      --red-light: #fff0f1;
+      --bg: #f5f6fa;
+      --surface: #fff;
+      --text: #202432;
+      --muted: #858b9b;
+      --border: #e9eaf0;
+      --green: #159b69;
+      --shadow: 0 8px 28px rgba(28, 35, 60, .055);
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+      min-height: 100vh
+    }
+
+    body.dark {
+      --bg: #12141b;
+      --surface: #1c202a;
+      --text: #f4f5f8;
+      --muted: #a0a5b3;
+      --border: #303542;
+      --red-light: #392329;
+      --shadow: 0 8px 28px rgba(0, 0, 0, .15)
+    }
+
+    button,
+    input,
+    select {
+      font: inherit
+    }
+
+    button {
+      cursor: pointer
+    }
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 250px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 26px 18px;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      transition: transform .25s
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 10px 35px
+    }
+
+    .logo-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: var(--red);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 19px
+    }
+
+    .logo-name {
+      font-size: 21px;
+      font-weight: 900;
+      letter-spacing: -1px
+    }
+
+    .logo-name span {
+      color: var(--red)
+    }
+
+    .nav-label {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      padding: 0 12px;
+      margin: 12px 0
+    }
+
+    .nav-link {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      text-align: left;
+      padding: 13px 14px;
+      border-radius: 12px;
+      margin: 3px 0;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      font-weight: 650;
+      font-size: 14px
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: var(--red-light);
+      color: var(--red)
+    }
+
+    .nav-icon {
+      width: 20px;
+      text-align: center;
+      font-size: 17px
+    }
+
+    .sidebar-bottom {
+      margin-top: auto
+    }
+
+    .profile {
+      border-top: 1px solid var(--border);
+      padding: 18px 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .avatar {
+      width: 37px;
+      height: 37px;
+      border-radius: 50%;
+      background: var(--red-light);
+      color: var(--red);
+      display: grid;
+      place-items: center;
+      font-weight: 800
+    }
+
+    .profile-name {
+      font-size: 13px;
+      font-weight: 750
+    }
+
+    .profile-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px
+    }
+
+    .main {
+      margin-left: 250px;
+      padding: 30px 36px 50px;
+      max-width: 1800px
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 13px
+    }
+
+    .menu-btn {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 9px 12px
+    }
+
+    .page-title {
+      font-size: 25px;
+      font-weight: 850;
+      letter-spacing: -.7px;
+      margin: 0
+    }
+
+    .page-date {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 5px
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .icon-btn {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 11px
+    }
+
+    .primary-btn {
+      border: 0;
+      background: var(--red);
+      color: white;
+      padding: 12px 17px;
+      border-radius: 11px;
+      font-weight: 750;
+      box-shadow: 0 5px 14px #e5394528
+    }
+
+    .primary-btn:hover {
+      background: var(--red-dark)
+    }
+
+    .secondary-btn {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 11px 15px;
+      border-radius: 10px;
+      font-weight: 650
+    }
+
+    .page {
+      display: none
+    }
+
+    .page.active {
+      display: block
+    }
+
+    .welcome {
+      margin-bottom: 22px
+    }
+
+    .welcome h2 {
+      font-size: 21px;
+      margin: 0 0 6px
+    }
+
+    .welcome p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 17px;
+      margin-bottom: 20px
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      padding: 21px;
+      box-shadow: var(--shadow);
+      min-width: 0
+    }
+
+    .stat-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650
+    }
+
+    .stat-icon {
+      width: 35px;
+      height: 35px;
+      border-radius: 11px;
+      background: var(--red-light);
+      display: grid;
+      place-items: center;
+      color: var(--red);
+      font-size: 17px
+    }
+
+    .stat-value {
+      font-size: 27px;
+      font-weight: 850;
+      letter-spacing: -1px;
+      margin: 15px 0 6px;
+      overflow-wrap: anywhere
+    }
+
+    .stat-note {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .balance-card {
+      background: linear-gradient(115deg, #d92e3c, #f05a63);
+      border-radius: 18px;
+      padding: 24px;
+      color: white;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      box-shadow: 0 10px 28px #e5394530
+    }
+
+    .balance-card .eyebrow {
+      font-size: 12px;
+      opacity: .85
+    }
+
+    .balance-card .amount {
+      font-size: 32px;
+      font-weight: 850;
+      margin: 8px 0
+    }
+
+    .balance-card p {
+      font-size: 12px;
+      opacity: .85;
+      margin: 0
+    }
+
+    .balance-symbol {
+      font-size: 55px;
+      opacity: .2
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 18px
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      padding: 21px;
+      box-shadow: var(--shadow);
+      min-width: 0
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 19px
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 800;
+      margin: 0
+    }
+
+    .panel-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 5px
+    }
+
+    .text-btn {
+      background: none;
+      border: 0;
+      color: var(--red);
+      font-size: 12px;
+      font-weight: 750
+    }
+
+    .chart {
+      height: 205px;
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      padding: 10px 4px 0
+    }
+
+    .chart-column {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 7px;
+      min-width: 0
+    }
+
+    .chart-bars {
+      height: 165px;
+      width: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 4px
+    }
+
+    .bar {
+      width: 35%;
+      max-width: 22px;
+      border-radius: 5px 5px 2px 2px;
+      min-height: 3px
+    }
+
+    .bar.income {
+      background: #24b783
+    }
+
+    .bar.expense {
+      background: var(--red)
+    }
+
+    .chart-day {
+      font-size: 10px;
+      color: var(--muted)
+    }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 15px
+    }
+
+    .legend span {
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block
+    }
+
+    .transaction-list {
+      display: flex;
+      flex-direction: column
+    }
+
+    .transaction-row {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border);
+      min-width: 0
+    }
+
+    .transaction-row:last-child {
+      border-bottom: 0
+    }
+
+    .tx-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: var(--red-light);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0
+    }
+
+    .tx-info {
+      min-width: 0;
+      flex: 1
+    }
+
+    .tx-name {
+      font-size: 13px;
+      font-weight: 750;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .tx-meta {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 5px
+    }
+
+    .tx-amount {
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap
+    }
+
+    .income-text {
+      color: var(--green)
+    }
+
+    .expense-text {
+      color: var(--red)
+    }
+
+    .form-panel {
+      max-width: 850px
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px
+    }
+
+    .field {
+      min-width: 0
+    }
+
+    .field.full {
+      grid-column: 1/-1
+    }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 8px
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 12px 13px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg);
+      color: var(--text);
+      outline: none;
+      min-width: 0
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--red)
+    }
+
+    .type-switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-bottom: 20px
+    }
+
+    .type-option {
+      padding: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--muted);
+      border-radius: 10px;
+      font-weight: 750
+    }
+
+    .type-option.active {
+      background: var(--red-light);
+      border-color: var(--red);
+      color: var(--red)
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px
+    }
+
+    .amount-input-wrap {
+      position: relative
+    }
+
+    .amount-input-wrap .currency-prefix {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 13px;
+      font-weight: 750;
+      color: var(--muted);
+      pointer-events: none
+    }
+
+    .amount-input-wrap input {
+      padding-left: 53px;
+      font-weight: 750;
+      font-size: 17px;
+      letter-spacing: .2px
+    }
+
+    .words-field {
+      background: var(--red-light) !important;
+      border-color: transparent !important;
+      color: var(--text) !important;
+      font-weight: 650
+    }
+
+    .words-caption {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 7px;
+      line-height: 1.5
+    }
+
+    .words-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px
+    }
+
+    .words-label span {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 500
+    }
+
+    .balance-warning {
+      display: none;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: #fff0f1;
+      color: #c92332;
+      border: 1px solid #ffd4d9;
+      font-size: 12px;
+      line-height: 1.6;
+      margin-top: 13px
+    }
+
+    .balance-warning.show {
+      display: block
+    }
+
+    body.dark .balance-warning {
+      background: #392329;
+      border-color: #66333a;
+      color: #ff9da5
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 11px;
+      align-items: end
+    }
+
+    .filter-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 11px;
+      margin-top: 13px
+    }
+
+    .filter-panel {
+      margin-bottom: 17px
+    }
+
+    [hidden] {
+      display: none !important
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 650px
+    }
+
+    th {
+      text-align: left;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: .7px;
+      padding: 13px 10px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    td {
+      padding: 14px 10px;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px
+    }
+
+    td strong {
+      font-weight: 750
+    }
+
+    .delete-btn {
+      border: 0;
+      background: var(--red-light);
+      color: var(--red);
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 11px;
+      font-weight: 750
+    }
+
+    .table-wrap {
+      overflow-x: auto
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 35px 10px;
+      font-size: 13px
+    }
+
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px
+    }
+
+    .category-item {
+      margin: 17px 0
+    }
+
+    .category-line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 8px;
+      gap: 10px
+    }
+
+    .track {
+      height: 8px;
+      background: var(--bg);
+      border-radius: 20px;
+      overflow: hidden
+    }
+
+    .track-fill {
+      height: 100%;
+      background: var(--red);
+      border-radius: 20px
+    }
+
+    .settings-stack {
+      display: grid;
+      gap: 16px;
+      max-width: 760px
+    }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 17px 0;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .setting-row:last-child {
+      border-bottom: 0
+    }
+
+    .setting-info strong {
+      font-size: 13px
+    }
+
+    .setting-info p {
+      font-size: 11px;
+      color: var(--muted);
+      margin: 5px 0 0
+    }
+
+    .setting-control {
+      width: 190px;
+      max-width: 45%
+    }
+
+    .setting-control input,
+    .setting-control select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--bg);
+      color: var(--text)
+    }
+
+    .danger-btn {
+      background: #fff0f1;
+      color: #d72c3b;
+      border: 1px solid #ffd8dc;
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-weight: 750
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #0008;
+      z-index: 15
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      background: #202432;
+      color: white;
+      padding: 13px 18px;
+      border-radius: 11px;
+      font-size: 13px;
+      z-index: 50;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: .2s;
+      pointer-events: none;
+      max-width: calc(100vw - 30px)
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    .small-muted {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    @media(max-width:1100px) {
+      .main {
+        padding: 25px 23px
+      }
+
+      .sidebar {
+        width: 225px
+      }
+
+      .main {
+        margin-left: 225px
+      }
+
+      .filters {
+        grid-template-columns: 1fr 1fr
+      }
+    }
+
+    @media(max-width:820px) {
+      .sidebar {
+        transform: translateX(-100%);
+        width: 270px
+      }
+
+      .sidebar.open {
+        transform: translateX(0)
+      }
+
+      .overlay.show {
+        display: block
+      }
+
+      .main {
+        margin-left: 0;
+        padding: 23px 20px 40px
+      }
+
+      .menu-btn {
+        display: block
+      }
+
+      .content-grid,
+      .analytics-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    @media(max-width:560px) {
+      .main {
+        padding: 17px 13px 32px
+      }
+
+      .topbar {
+        align-items: flex-start;
+        margin-bottom: 22px
+      }
+
+      .page-title {
+        font-size: 21px
+      }
+
+      .top-actions .primary-btn {
+        padding: 10px 11px;
+        font-size: 11px
+      }
+
+      .top-actions .icon-btn {
+        padding: 9px
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px
+      }
+
+      .stat-card {
+        padding: 15px
+      }
+
+      .stat-card:last-child {
+        grid-column: 1/-1
+      }
+
+      .stat-value {
+        font-size: 21px
+      }
+
+      .balance-card {
+        padding: 19px
+      }
+
+      .balance-card .amount {
+        font-size: 27px
+      }
+
+      .balance-symbol {
+        font-size: 40px
+      }
+
+      .panel {
+        padding: 16px
+      }
+
+      .filters {
+        grid-template-columns: 1fr
+      }
+
+      .filter-row {
+        grid-template-columns: 1fr
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr
+      }
+
+      .field.full {
+        grid-column: auto
+      }
+
+      .form-actions {
+        flex-direction: column
+      }
+
+      .form-actions button {
+        width: 100%
+      }
+
+      .setting-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px
+      }
+
+      .setting-control {
+        width: 100%;
+        max-width: 100%
+      }
+
+      .chart {
+        gap: 5px
+      }
+
+      .chart-day {
+        font-size: 9px
+      }
+    }
+
+    @media(max-width:360px) {
+      .stats-grid {
+        grid-template-columns: 1fr
+      }
+
+      .stat-card:last-child {
+        grid-column: auto
+      }
+
+      .top-actions .primary-btn {
+        font-size: 10px
+      }
+
+      .logo-name {
+        font-size: 19px
+      }
+    }
+
+    @media(min-width:1600px) {
+      .main {
+        padding: 40px 55px
+      }
+
+      .panel,
+      .stat-card {
+        padding: 25px
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+        animation: none !important
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">
+      <div class="logo-mark">J</div>
+      <div class="logo-name">JAX<span>MONEY</span></div>
+    </div>
+    <div class="nav-label">WORKSPACE</div>
+    <button class="nav-link active" data-page="dashboard"><span class="nav-icon">⌂</span>Dashboard</button>
+    <button class="nav-link" data-page="transactions"><span class="nav-icon">⇄</span>Transactions</button>
+    <button class="nav-link" data-page="analytics"><span class="nav-icon">▥</span>Analytics</button>
+    <div class="nav-label">PREFERENCES</div>
+    <button class="nav-link" data-page="settings"><span class="nav-icon">⚙</span>Settings</button>
+    <div class="sidebar-bottom">
+      <div class="profile">
+        <div class="avatar" id="avatarLetter">J</div>
+        <div>
+          <div class="profile-name" id="sidebarName">My Account</div>
+          <div class="profile-sub">Personal account</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left"><button class="menu-btn" onclick="toggleSidebar()">☰</button>
+        <div>
+          <h1 class="page-title" id="pageTitle">Dashboard</h1>
+          <div class="page-date" id="currentDate"></div>
+        </div>
+      </div>
+      <div class="top-actions"><button class="icon-btn" onclick="toggleDark()"
+          title="Toggle dark mode">◐</button><button class="primary-btn" onclick="showPage('add')">＋ Add
+          transaction</button></div>
+    </header>
+
+    <section class="page active" id="dashboard">
+      <div class="welcome">
+        <h2 id="welcomeText">Welcome back 👋</h2>
+        <p>Here's what's happening with your money.</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-top">Total Income <span class="stat-icon">↘</span></div>
+          <div class="stat-value income-text" id="totalIncome">₦0.00</div>
+          <div class="stat-note">All recorded income</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">Total Expenses <span class="stat-icon"> ↗</span></div>
+          <div class="stat-value expense-text" id="totalExpense">₦0.00</div>
+          <div class="stat-note">All recorded expenses</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">Transactions <span class="stat-icon">⇄</span></div>
+          <div class="stat-value" id="totalTransactions">0</div>
+          <div class="stat-note">All recorded transactions</div>
+        </div>
+      </div>
+      <div class="balance-card">
+        <div>
+          <div class="eyebrow">TOTAL AVAILABLE BALANCE</div>
+          <div class="amount" id="balanceAmount">₦0.00</div>
+          <p>Your income minus your expenses</p>
+        </div>
+        <div class="balance-symbol">⁜</div>
+      </div>
+      <div class="content-grid">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">Weekly overview</h3>
+              <div class="panel-sub">Your income and expenses over 7 days</div>
+            </div>
+          </div>
+          <div class="chart" id="weeklyChart"></div>
+          <div class="legend"><span><i class="dot" style="background:#24b783"></i>Income</span><span><i class="dot"
+                style="background:var(--red)"></i>Expenses</span></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">Recent transactions</h3>
+              <div class="panel-sub">Your latest money activity</div>
+            </div><button class="text-btn" onclick="showPage('transactions')">View all</button>
+          </div>
+          <div class="transaction-list" id="recentTransactions"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="transactions">
+      <div class="panel filter-panel">
+        <div class="panel-head">
+          <div>
+            <h3 class="panel-title">Find transactions</h3>
+            <div class="panel-sub">Search and filter your financial activity</div>
+          </div><button class="secondary-btn" onclick="clearFilters()">Clear filters</button>
+        </div>
+        <div class="filters">
+          <div class="field"><label for="searchInput">Search</label><input id="searchInput"
+              placeholder="Search description or category..." oninput="renderTransactions()"></div>
+          <div class="field"><label for="typeFilter">Transaction type</label><select id="typeFilter"
+              onchange="renderTransactions()">
+              <option value="all">All types</option>
+              <option value="income">Income</option>
+              <option value="expense">Expenses</option>
+            </select></div>
+          <div class="field"><label for="categoryFilter">Category</label><select id="categoryFilter"
+              onchange="renderTransactions()">
+              <option value="all">All categories</option>
+            </select></div>
+          <div class="field"><label for="dateRange">Date range</label><select id="dateRange"
+              onchange="handleDateRange()">
+              <option value="all">All Time</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+              <option value="3months">Last 3 Months</option>
+              <option value="6months">Last 6 Months</option>
+              <option value="custom">Custom Date Range</option>
+            </select></div>
+        </div>
+        <div class="filter-row" id="customDateRange" hidden>
+          <div class="field"><label for="startDate">Start date</label><input type="date" id="startDate"
+              onchange="renderTransactions()"></div>
+          <div class="field"><label for="endDate">End date</label><input type="date" id="endDate"
+              onchange="renderTransactions()"></div>
+        </div>
+        <p class="small-muted" id="filterMessage" aria-live="polite"></p>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h3 class="panel-title">Transaction history</h3>
+            <div class="panel-sub" id="transactionCount">0 transactions</div>
+          </div><button class="secondary-btn" onclick="exportCSV()">↓ Export CSV</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>DESCRIPTION</th>
+                <th>CATEGORY</th>
+                <th>DATE</th>
+                <th>TYPE</th>
+                <th>AMOUNT</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+            <tbody id="transactionTable"></tbody>
+          </table>
+        </div>
+        <div class="empty" id="emptyTransactions" hidden>No transactions match your filters.</div>
+      </div>
+    </section>
+
+    <section class="page" id="add">
+      <div class="panel form-panel">
+        <div class="panel-head">
+          <div>
+            <h3 class="panel-title">Add a transaction</h3>
+            <div class="panel-sub">Record money coming in or going out.</div>
+          </div>
+        </div>
+        <div class="type-switch"><button type="button" class="type-option active" id="incomeType"
+            onclick="setType('income')">↗ Income</button><button type="button" class="type-option" id="expenseType"
+            onclick="setType('expense')">↘ Expense</button></div>
+        <form id="transactionForm">
+          <div class="form-grid">
+            <div class="field full"><label for="description">Description</label><input id="description" required
+                maxlength="80" placeholder="e.g. Monthly allowance"></div>
+            <div class="field">
+              <label for="amount">Amount</label>
+              <div class="amount-input-wrap"><span class="currency-prefix" id="currencyPrefix">₦</span><input
+                  id="amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00" required></div>
+              <div class="words-caption">Commas are added automatically as you type.</div>
+            </div>
+            <div class="field">
+              <div class="words-label"><label for="amountWords">Amount in words</label><span>Automatic</span></div>
+              <input id="amountWords" class="words-field" type="text" readonly
+                placeholder="Your amount in words will appear here">
+              <div class="words-caption">Written version of your amount.</div>
+            </div>
+            <div class="field"><label for="category">Category</label><select id="category" required></select></div>
+            <div class="field"><label for="transactionDate">Date</label><input id="transactionDate" type="date"
+                required></div>
+            <div class="field"><label for="paymentMethod">Payment method</label><select id="paymentMethod">
+                <option>Cash</option>
+                <option>Bank transfer</option>
+                <option>Card</option>
+                <option>Other</option>
+              </select></div>
+          </div>
+
+          <!-- BALANCE WARNING -->
+          <div class="balance-warning" id="balanceWarning" role="alert"></div>
+
+          <div class="form-actions"><button class="primary-btn" type="submit">Save transaction</button><button
+              class="secondary-btn" type="button" onclick="showPage('dashboard')">Cancel</button></div>
+        </form>
+      </div>
+    </section>
+
+    <section class="page" id="analytics">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-top">Income</div>
+          <div class="stat-value income-text" id="analyticsIncome">₦0.00</div>
+          <div class="stat-note">Total recorded</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">Expenses</div>
+          <div class="stat-value expense-text" id="analyticsExpense">₦0.00</div>
+          <div class="stat-note">Total recorded</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">Net balance</div>
+          <div class="stat-value" id="analyticsBalance">₦0.00</div>
+          <div class="stat-note">Income minus expenses</div>
+        </div>
+      </div>
+      <div class="analytics-grid">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">Weekly activity</h3>
+              <div class="panel-sub">Last seven days</div>
+            </div>
+          </div>
+          <div class="chart" id="analyticsChart"></div>
+          <div class="legend"><span><i class="dot" style="background:#24b783"></i>Income</span><span><i class="dot"
+                style="background:var(--red)"></i>Expenses</span></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">Expense categories</h3>
+              <div class="panel-sub">Where your money goes</div>
+            </div>
+          </div>
+          <div id="categoryBreakdown"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="settings">
+      <div class="settings-stack">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">Personal preferences</h3>
+              <div class="panel-sub">Customise your JAXMONEY experience.</div>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info"><strong>Profile name</strong>
+              <p>Name displayed in your account.</p>
+            </div>
+            <div class="setting-control"><input id="profileInput" maxlength="35" placeholder="Your name"
+                onchange="saveSettings()"></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info"><strong>Currency</strong>
+              <p>Choose how amounts are displayed.</p>
+            </div>
+            <div class="setting-control"><select id="currencyInput" onchange="saveSettings()">
+                <option value="NGN">NGN — Nigerian Naira</option>
+                <option value="USD">USD — US Dollar</option>
+                <option value="GBP">GBP — British Pound</option>
+                <option value="EUR">EUR — Euro</option>
+                <option value="GHS">GHS — Ghanaian Cedi</option>
+                <option value="KES">KES — Kenyan Shilling</option>
+                <option value="ZAR">ZAR — South African Rand</option>
+                <option value="CAD">CAD — Canadian Dollar</option>
+                <option value="AUD">AUD — Australian Dollar</option>
+                <option value="INR">INR — Indian Rupee</option>
+              </select></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info"><strong>Date format</strong>
+              <p>Choose how dates appear.</p>
+            </div>
+            <div class="setting-control"><select id="dateFormatInput" onchange="saveSettings()">
+                <option value="long">17 Nov 2026</option>
+                <option value="short">17/11/2026</option>
+                <option value="iso">2026-11-17</option>
+              </select></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info"><strong>Dark mode</strong>
+              <p>Switch between light and dark appearance.</p>
+            </div><button class="secondary-btn" onclick="toggleDark()">Toggle theme ◐</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">Data management</h3>
+              <div class="panel-sub">Keep a backup of your records.</div>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info"><strong>Export backup</strong>
+              <p>Download all your transactions and settings.</p>
+            </div><button class="secondary-btn" onclick="backupData()">Download JSON</button>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info"><strong>Restore backup</strong>
+              <p>Restore a JAXMONEY JSON backup file.</p>
+            </div><button class="secondary-btn" onclick="document.getElementById('restoreFile').click()">Choose
+              file</button><input type="file" id="restoreFile" accept=".json,application/json" hidden
+              onchange="restoreData(event)">
+          </div>
+          <div class="setting-row">
+            <div class="setting-info"><strong>Delete all transactions</strong>
+              <p>This clears transaction records in this browser.</p>
+            </div><button class="danger-btn" onclick="resetData()">Reset data</button>
+          </div>
+        </div>
+        <div class="panel">
+          <h3 class="panel-title">About JAXMONEY</h3>
+          <p class="small-muted">JAXMONEY is a personal finance tracker. Your records are stored locally in this
+            browser. It does not connect to your bank or automatically sync across devices.</p>
+          <p class="small-muted">Changing currency changes the display format only. It does not convert amounts using
+            exchange rates.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const STORAGE_KEY = "jaxMoneyData";
+    const SETTINGS_KEY = "jaxMoneySettings";
+    const categories = {
+      income: ["Allowance", "Business", "Gift", "Salary", "Other"],
+      expense: ["Food", "Transport", "Shopping", "Education", "Entertainment", "Bills", "Other"]
+    };
+    let transactions = [];
+    let settings = { name: "My Account", currency: "NGN", dateFormat: "long", dark: false };
+    let currentType = "income";
+    let selectedDateRange = "all";
+
+    const currencyNames = { NGN: "Naira", USD: "Dollars", GBP: "Pounds", EUR: "Euros", GHS: "Cedis", KES: "Shillings", ZAR: "Rand", CAD: "Dollars", AUD: "Dollars", INR: "Rupees" };
+    const currencyMinorNames = { NGN: "Kobo", USD: "Cents", GBP: "Pence", EUR: "Cents", GHS: "Pesewas", KES: "Cents", ZAR: "Cents", CAD: "Cents", AUD: "Cents", INR: "Paise" };
+
+    function underThousandToWords(number) {
+      const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+      const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+      let words = "";
+      if (number >= 100) { words += ones[Math.floor(number / 100)] + " Hundred"; number %= 100; if (number) words += " " }
+      if (number >= 20) { words += tens[Math.floor(number / 10)]; if (number % 10) words += " " + ones[number % 10] }
+      else if (number > 0) words += ones[number];
+      return words;
+    }
+    function numberToWords(number) {
+      if (!Number.isSafeInteger(number) || number < 0) return "";
+      if (number === 0) return "Zero";
+      const scales = ["", "Thousand", "Million", "Billion", "Trillion"];
+      let parts = [], i = 0;
+      while (number > 0) {
+        const group = number % 1000;
+        if (group) parts.unshift(underThousandToWords(group) + (scales[i] ? " " + scales[i] : ""));
+        number = Math.floor(number / 1000); i++;
+      }
+      return parts.join(", ");
+    }
+    function amountToWords(value) {
+      if (!Number.isFinite(value) || value < 0) return "";
+      const whole = Math.floor(value);
+      const minor = Math.round((value - whole) * 100);
+      const majorName = currencyNames[settings.currency] || "Units";
+      const minorName = currencyMinorNames[settings.currency] || "Cents";
+      let result = whole > 0 ? numberToWords(whole) + " " + majorName : "";
+      if (minor > 0) result += (result ? " and " : "") + numberToWords(minor) + " " + minorName;
+      return result ? result + " Only" : "Zero " + majorName + " Only";
+    }
+    function getRawAmount(value) { return value.replace(/,/g, "").replace(/[^\d.]/g, "") }
+    function formatAmountInput() {
+      const input = document.getElementById("amount");
+      let raw = getRawAmount(input.value);
+      const pieces = raw.split(".");
+      let integer = (pieces[0] || "").replace(/^0+(?=\d)/, "");
+      let decimal = pieces.length > 1 ? pieces.slice(1).join("").slice(0, 2) : null;
+      input.value = integer.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (decimal !== null ? "." + decimal : "");
+      updateAmountWords();
+      updateBalanceWarning();
+    }
+    function updateAmountWords() {
+      const raw = getRawAmount(document.getElementById("amount").value);
+      const amount = Number(raw);
+      document.getElementById("amountWords").value = raw && Number.isFinite(amount) && amount > 0 ? amountToWords(amount) : "";
+    }
+    function getAmountValue() { return Number(getRawAmount(document.getElementById("amount").value)) }
+    document.getElementById("amount").addEventListener("input", formatAmountInput);
+    document.getElementById("amount").addEventListener("blur", function () {
+      const value = getAmountValue();
+      if (Number.isFinite(value) && value > 0) {
+        this.value = value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        updateAmountWords();
+      }
+    });
+    function loadData() {
+      try { const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); transactions = Array.isArray(saved) ? saved.filter(validTransaction) : [] } catch (e) { transactions = [] }
+      try { settings = { ...settings, ...JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}") } } catch (e) { }
+    }
+    function validTransaction(t) {
+      return t && typeof t === "object" && typeof t.id === "string" && ["income", "expense"].includes(t.type) && typeof t.description === "string" && Number.isFinite(Number(t.amount)) && Number(t.amount) > 0 && typeof t.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(t.date) && !Number.isNaN(new Date(t.date + "T00:00:00").getTime());
+    }
+    function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions)) }
+    function saveSettingsData() { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)) }
+    function money(value) {
+      try { return new Intl.NumberFormat("en", { style: "currency", currency: settings.currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Number(value) || 0) }
+      catch (e) { return (Number(value) || 0).toFixed(2) }
+    }
+    function dateObject(value) { return new Date(value + "T00:00:00") }
+    function formatDate(value) {
+      const d = dateObject(value);
+      if (settings.dateFormat === "iso") return value;
+      if (settings.dateFormat === "short") return new Intl.DateTimeFormat("en-GB").format(d);
+      return new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric" }).format(d);
+    }
+    function todayISO() {
+      const d = new Date();
+      return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, "0"), String(d.getDate()).padStart(2, "0")].join("-");
+    }
+    function toast(message) {
+      const el = document.getElementById("toast"); el.textContent = message; el.classList.add("show");
+      clearTimeout(toast.timer); toast.timer = setTimeout(() => el.classList.remove("show"), 3000);
+    }
+    function escapeHTML(value) { return String(value).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])) }
+    function makeId() { return Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10) }
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.getElementById("overlay").classList.toggle("show");
+    }
+    function showPage(page) {
+      if (page === "addExpense") { currentType = "expense"; page = "add" }
+      else if (page === "add") currentType = "income";
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      document.querySelectorAll(".nav-link").forEach(b => b.classList.remove("active"));
+      document.getElementById(page).classList.add("active");
+      const nav = document.querySelector(`[data-page="${page}"]`); if (nav) nav.classList.add("active");
+      const titles = { dashboard: "Dashboard", transactions: "Transactions", add: "Add transaction", analytics: "Analytics", settings: "Settings" };
+      document.getElementById("pageTitle").textContent = titles[page] || "Dashboard";
+      if (page === "add") { updateTypeUI(); updateAmountWords(); updateBalanceWarning() }
+      if (page === "transactions") renderTransactions();
+      if (page === "analytics") renderAnalytics();
+      document.getElementById("sidebar").classList.remove("open");
+      document.getElementById("overlay").classList.remove("show");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    document.querySelectorAll(".nav-link").forEach(btn => btn.addEventListener("click", () => showPage(btn.dataset.page)));
+
+    function setType(type) {
+      currentType = type; updateTypeUI(); updateBalanceWarning();
+    }
+    function updateTypeUI() {
+      document.getElementById("incomeType").classList.toggle("active", currentType === "income");
+      document.getElementById("expenseType").classList.toggle("active", currentType === "expense");
+      document.getElementById("category").innerHTML = categories[currentType].map(c => `<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");
+    }
+
+    /* BALANCE PROTECTION */
+    function getAvailableBalance() {
+      const t = transactions.reduce((acc, item) => {
+        if (item.type === "income") acc += Number(item.amount);
+        else acc -= Number(item.amount);
+        return acc;
+      }, 0);
+      return t;
+    }
+    function updateBalanceWarning() {
+      const warning = document.getElementById("balanceWarning");
+      const amount = getAmountValue();
+      const balance = getAvailableBalance();
+      if (currentType === "expense" && Number.isFinite(amount) && amount > balance) {
+        warning.textContent = "⚠️ This expense is too high. Your available balance is " + money(balance) + ". You cannot spend more than your available balance.";
+        warning.classList.add("show");
+      } else {
+        warning.classList.remove("show");
+        warning.textContent = "";
+      }
+    }
+    document.getElementById("amount").addEventListener("input", updateBalanceWarning);
+
+    /* SAVE TRANSACTION */
+    document.getElementById("transactionForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const description = document.getElementById("description").value.trim();
+      const amount = getAmountValue();
+      const date = document.getElementById("transactionDate").value;
+      if (!description || !Number.isFinite(amount) || amount <= 0 || !date) {
+        toast("Please enter valid transaction details."); return;
+      }
+
+      // Final balance check: an expense cannot exceed the current balance.
+      const availableBalance = getAvailableBalance();
+      if (currentType === "expense" && amount > availableBalance) {
+        updateBalanceWarning();
+        toast("Expense rejected: insufficient balance.");
+        return;
+      }
+
+      transactions.unshift({
+        id: makeId(), type: currentType, description, amount,
+        category: document.getElementById("category").value,
+        date, payment: document.getElementById("paymentMethod").value
+      });
+      saveData();
+      this.reset();
+      document.getElementById("transactionDate").value = todayISO();
+      document.getElementById("amountWords").value = "";
+      document.getElementById("balanceWarning").classList.remove("show");
+      updateTypeUI();
+      refreshAll();
+      toast("Transaction saved successfully!");
+      showPage("transactions");
+    });
+
+    function totals(list = transactions) {
+      return list.reduce((acc, t) => { acc[t.type] += Number(t.amount); return acc }, { income: 0, expense: 0 });
+    }
+    function refreshAll() {
+      const t = totals();
+      document.getElementById("totalIncome").textContent = money(t.income);
+      document.getElementById("totalExpense").textContent = money(t.expense);
+      document.getElementById("totalTransactions").textContent = transactions.length;
+      document.getElementById("balanceAmount").textContent = money(t.income - t.expense);
+      renderChart("weeklyChart"); renderRecent(); renderCategoryFilter();
+      if (document.getElementById("transactions").classList.contains("active")) renderTransactions();
+      if (document.getElementById("analytics").classList.contains("active")) renderAnalytics();
+    }
+    function renderRecent() {
+      const el = document.getElementById("recentTransactions"), recent = transactions.slice(0, 5);
+      if (!recent.length) { el.innerHTML = '<div class="empty">No transactions yet. Add your first one!</div>'; return }
+      el.innerHTML = recent.map(t => `<div class="transaction-row"><div class="tx-icon">${t.type === "income" ? "↗" : "↘"}</div><div class="tx-info"><div class="tx-name">${escapeHTML(t.description)}</div><div class="tx-meta">${escapeHTML(t.category)} · ${formatDate(t.date)}</div></div><div class="tx-amount ${t.type === "income" ? "income-text" : "expense-text"}">${t.type === "income" ? "+" : "−"}${money(t.amount)}</div></div>`).join("");
+    }
+    function renderChart(elementId) {
+      const el = document.getElementById(elementId); if (!el) return;
+      const days = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - i);
+        const key = [d.getFullYear(), String(d.getMonth() + 1).padStart(2, "0"), String(d.getDate()).padStart(2, "0")].join("-");
+        const dayTx = transactions.filter(t => t.date === key);
+        days.push({ label: d.toLocaleDateString("en", { weekday: "short" }), income: dayTx.filter(t => t.type === "income").reduce((s, t) => s + Number(t.amount), 0), expense: dayTx.filter(t => t.type === "expense").reduce((s, t) => s + Number(t.amount), 0) });
+      }
+      const max = Math.max(1, ...days.flatMap(d => [d.income, d.expense]));
+      el.innerHTML = days.map(d => `<div class="chart-column"><div class="chart-bars"><div class="bar income" title="Income: ${money(d.income)}" style="height:${d.income ? Math.max(3, d.income / max * 140) : 0}px"></div><div class="bar expense" title="Expenses: ${money(d.expense)}" style="height:${d.expense ? Math.max(3, d.expense / max * 140) : 0}px"></div></div><div class="chart-day">${d.label}</div></div>`).join("");
+    }
+    function renderCategoryFilter() {
+      const select = document.getElementById("categoryFilter"), current = select.value || "all";
+      const all = [...new Set([...categories.income, ...categories.expense])];
+      select.innerHTML = '<option value="all">All categories</option>' + all.map(c => `<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");
+      select.value = all.includes(current) ? current : "all";
+    }
+    function handleDateRange() {
+      selectedDateRange = document.getElementById("dateRange").value;
+      document.getElementById("customDateRange").hidden = selectedDateRange !== "custom";
+      renderTransactions();
+    }
+    function getDateBounds() {
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      let start = null, end = new Date(today);
+      if (selectedDateRange === "week") {
+        const day = (today.getDay() + 6) % 7; start = new Date(today); start.setDate(today.getDate() - day);
+      } else if (selectedDateRange === "month") start = new Date(today.getFullYear(), today.getMonth(), 1);
+      else if (selectedDateRange === "3months") { start = new Date(today); start.setMonth(start.getMonth() - 3) }
+      else if (selectedDateRange === "6months") { start = new Date(today); start.setMonth(start.getMonth() - 6) }
+      else if (selectedDateRange === "custom") {
+        const from = document.getElementById("startDate").value, to = document.getElementById("endDate").value;
+        if (!from || !to) return { incomplete: true };
+        start = dateObject(from); end = dateObject(to);
+        if (start > end) return { invalid: true };
+      } else return null;
+      return { start, end };
+    }
+    function isWithinDateRange(transactionDate) {
+      const bounds = getDateBounds(); if (!bounds) return true;
+      if (bounds.incomplete || bounds.invalid) return false;
+      const date = dateObject(transactionDate); return date >= bounds.start && date <= bounds.end;
+    }
+    function renderTransactions() {
+      const search = (document.getElementById("searchInput").value || "").toLowerCase().trim();
+      const type = document.getElementById("typeFilter").value, category = document.getElementById("categoryFilter").value, bounds = getDateBounds();
+      let message = "";
+      if (bounds && bounds.incomplete) message = "Choose both a start date and an end date to use your custom range.";
+      else if (bounds && bounds.invalid) message = "The start date must be before or the same as the end date.";
+      document.getElementById("filterMessage").textContent = message;
+      const filtered = transactions.filter(t => (t.description + " " + t.category).toLowerCase().includes(search) && (type === "all" || t.type === type) && (category === "all" || t.category === category) && isWithinDateRange(t.date)).sort((a, b) => b.date.localeCompare(a.date));
+      document.getElementById("transactionCount").textContent = `${filtered.length} transaction${filtered.length === 1 ? "" : "s"}`;
+      document.getElementById("emptyTransactions").hidden = filtered.length !== 0;
+      document.getElementById("transactionTable").innerHTML = filtered.map(t => `<tr><td><strong>${escapeHTML(t.description)}</strong><br><span class="small-muted">${escapeHTML(t.payment || "")}</span></td><td>${escapeHTML(t.category)}</td><td>${formatDate(t.date)}</td><td><span class="${t.type === "income" ? "income-text" : "expense-text"}">${t.type === "income" ? "Income" : "Expense"}</span></td><td><strong class="${t.type === "income" ? "income-text" : "expense-text"}">${t.type === "income" ? "+" : "−"}${money(t.amount)}</strong></td><td><button class="delete-btn" onclick="deleteTransaction('${t.id}')">Delete</button></td></tr>`).join("");
+    }
+    function clearFilters() {
+      document.getElementById("searchInput").value = ""; document.getElementById("typeFilter").value = "all"; document.getElementById("categoryFilter").value = "all"; document.getElementById("dateRange").value = "all"; document.getElementById("startDate").value = ""; document.getElementById("endDate").value = ""; selectedDateRange = "all"; document.getElementById("customDateRange").hidden = true; renderTransactions();
+    }
+    function deleteTransaction(id) {
+      if (!confirm("Delete this transaction?")) return;
+      transactions = transactions.filter(t => t.id !== id); saveData(); refreshAll(); updateBalanceWarning(); toast("Transaction deleted.");
+    }
+    function renderAnalytics() {
+      const t = totals();
+      document.getElementById("analyticsIncome").textContent = money(t.income); document.getElementById("analyticsExpense").textContent = money(t.expense); document.getElementById("analyticsBalance").textContent = money(t.income - t.expense);
+      renderChart("analyticsChart");
+      const expenses = transactions.filter(t => t.type === "expense"), byCategory = {};
+      expenses.forEach(t => byCategory[t.category] = (byCategory[t.category] || 0) + Number(t.amount));
+      const sorted = Object.entries(byCategory).sort((a, b) => b[1] - a[1]), total = expenses.reduce((s, t) => s + Number(t.amount), 0), el = document.getElementById("categoryBreakdown");
+      if (!sorted.length) { el.innerHTML = '<div class="empty">No expense data yet.</div>'; return }
+      el.innerHTML = sorted.map(([name, value]) => `<div class="category-item"><div class="category-line"><strong>${escapeHTML(name)}</strong><span>${money(value)} · ${total ? (value / total * 100).toFixed(1) : 0}%</span></div><div class="track"><div class="track-fill" style="width:${total ? value / total * 100 : 0}%"></div></div></div>`).join("");
+    }
+    function exportCSV() {
+      const headers = ["Description", "Type", "Category", "Amount", "Currency", "Date", "Payment method"], rows = transactions.map(t => [t.description, t.type, t.category, t.amount, settings.currency, t.date, t.payment || ""]);
+      const csv = [headers, ...rows].map(row => row.map(v => '"' + String(v ?? "").replace(/"/g, '""') + '"').join(",")).join("\n");
+      downloadFile("jaxmoney-transactions.csv", "\uFEFF" + csv, "text/csv;charset=utf-8"); toast("CSV export ready.");
+    }
+    function backupData() { downloadFile("jaxmoney-backup.json", JSON.stringify({ app: "JAXMONEY", version: 1, transactions, settings }, null, 2), "application/json"); toast("Backup downloaded.") }
+    function downloadFile(name, content, type) {
+      const blob = new Blob([content], { type }), url = URL.createObjectURL(blob), a = document.createElement("a"); a.href = url; a.download = name; a.click(); URL.revokeObjectURL(url);
+    }
+    function restoreData(event) {
+      const file = event.target.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          if (!data || !Array.isArray(data.transactions) || !data.transactions.every(validTransaction)) throw new Error("Invalid backup");
+          if (!confirm("Restore this backup? It will replace your current transactions.")) return;
+          transactions = data.transactions;
+          if (data.settings && typeof data.settings === "object") settings = { ...settings, ...data.settings };
+          saveData(); saveSettingsData(); applySettings(); refreshAll(); toast("Backup restored successfully.");
+        } catch (e) { toast("That backup file is not valid.") }
+        finally { event.target.value = "" }
+      };
+      reader.readAsText(file);
+    }
+    function resetData() {
+      if (!confirm("Are you sure? This will permanently delete all your transactions from this browser.")) return;
+      transactions = []; saveData(); refreshAll(); updateBalanceWarning(); toast("All transactions cleared.");
+    }
+    function saveSettings() {
+      settings.name = document.getElementById("profileInput").value.trim() || "My Account";
+      settings.currency = document.getElementById("currencyInput").value;
+      settings.dateFormat = document.getElementById("dateFormatInput").value;
+      saveSettingsData(); applySettings(); refreshAll(); updateAmountWords(); toast("Settings saved.");
+    }
+    function applySettings() {
+      document.body.classList.toggle("dark", !!settings.dark);
+      document.getElementById("profileInput").value = settings.name || "My Account";
+      document.getElementById("currencyInput").value = settings.currency || "NGN";
+      document.getElementById("dateFormatInput").value = settings.dateFormat || "long";
+      document.getElementById("sidebarName").textContent = settings.name || "My Account";
+      document.getElementById("avatarLetter").textContent = (settings.name || "J").charAt(0).toUpperCase();
+      document.getElementById("welcomeText").textContent = "Welcome back, " + (settings.name || "there") + " 👋";
+      const parts = new Intl.NumberFormat("en", { style: "currency", currency: settings.currency || "NGN", currencyDisplay: "narrowSymbol" }).formatToParts(0);
+      document.getElementById("currencyPrefix").textContent = parts.find(p => p.type === "currency")?.value || "";
+    }
+    function toggleDark() { settings.dark = !settings.dark; saveSettingsData(); applySettings() }
+    function updateDate() {
+      document.getElementById("currentDate").textContent = new Date().toLocaleDateString("en", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+    }
+    loadData();
+    applySettings();
+    updateDate();
+    document.getElementById("transactionDate").value = todayISO();
+    refreshAll();
+    updateTypeUI();
+  </script>
+</body>
+
+</html>

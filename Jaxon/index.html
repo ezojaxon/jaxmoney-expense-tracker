@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Jaxon | Future Innovator</title>
+
+     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+
+     <style>
+          :root {
+               --navy: #10172d;
+               --blue: #526dff;
+               --lime: #c7ff65;
+               --white: #ffffff;
+               --muted: #a4acc4;
+               --light: #f5f7ff;
+          }
+
+          * {
+               margin: 0;
+               padding: 0;
+               box-sizing: border-box;
+          }
+
+          html {
+               scroll-behavior: smooth;
+          }
+
+          body {
+               font-family: 'Nunito', sans-serif;
+               color: var(--navy);
+               overflow-x: hidden;
+               background: var(--light);
+          }
+
+          a {
+               text-decoration: none;
+               color: inherit;
+          }
+
+          .container {
+               width: 88%;
+               max-width: 1200px;
+               margin: auto;
+          }
+
+          /* NAVIGATION */
+
+          header {
+               position: fixed;
+               top: 0;
+               width: 100%;
+               z-index: 100;
+               padding: 20px 0;
+               transition: .3s;
+          }
+
+          header.scrolled {
+               background: rgba(16, 23, 45, .96);
+               padding: 13px 0;
+               backdrop-filter: blur(15px);
+          }
+
+          nav {
+               display: flex;
+               align-items: center;
+               justify-content: space-between;
+          }
+
+          .logo {
+               font-family: 'Outfit';
+               font-size: 27px;
+               font-weight: 900;
+               color: white;
+               letter-spacing: -1px;
+          }
+
+          .logo span {
+               color: var(--lime);
+          }
+
+          .nav-links {
+               display: flex;
+               gap: 32px;
+               color: white;
+               font-weight: 700;
+               font-size: 14px;
+          }
+
+          .nav-links a {
+               transition: .3s;
+          }
+
+          .nav-links a:hover {
+               color: var(--lime);
+          }
+
+          .nav-button {
+               background: var(--lime);
+               padding: 11px 22px;
+               border-radius: 30px;
+               font-weight: 900;
+               font-size: 13px;
+               color: var(--navy);
+               transition: .3s;
+          }
+
+          .nav-button:hover {
+               transform: scale(1.08);
+          }
+
+          /* HERO */
+
+          .hero {
+               min-height: 750px;
+               background: var(--navy);
+               position: relative;
+               overflow: hidden;
+               display: flex;
+               align-items: center;
+               padding: 130px 0 90px;
+               color: white;
+          }
+
+          .hero::before {
+               content: "";
+               position: absolute;
+               width: 550px;
+               height: 550px;
+               border-radius: 50%;
+               background: #3549a7;
+               filter: blur(130px);
+               opacity: .35;
+               right: -100px;
+               top: 80px;
+          }
+
+          .hero-content {
+               display: grid;
+               grid-template-columns: 1.1fr .9fr;
+               gap: 50px;
+               align-items: center;
+               position: relative;
+               z-index: 2;
+          }
+
+          .status {
+               display: inline-flex;
+               align-items: center;
+               gap: 9px;
+               background: rgba(199, 255, 101, .12);
+               color: var(--lime);
+               border: 1px solid rgba(199, 255, 101, .25);
+               padding: 9px 16px;
+               border-radius: 30px;
+               font-size: 12px;
+               font-weight: 900;
+               margin-bottom: 25px;
+          }
+
+          .dot {
+               height: 8px;
+               width: 8px;
+               border-radius: 50%;
+               background: var(--lime);
+               animation: pulse 1.5s infinite;
+          }
+
+          @keyframes pulse {
+               50% {
+                    opacity: .3;
+                    transform: scale(.7);
+               }
+          }
+
+          .hero h1 {
+               font-family: 'Outfit';
+               font-size: clamp(55px, 7vw, 88px);
+               font-weight: 900;
+               line-height: 1.02;
+               letter-spacing: -4px;
+               margin-bottom: 22px;
+          }
+
+          .hero h1 span {
+               color: var(--lime);
+               display: block;
+          }
+
+          .hero-text {
+               color: #b8c0d7;
+               font-size: 17px;
+               line-height: 1.8;
+               max-width: 490px;
+               margin-bottom: 30px;
+          }
+
+          .hero-buttons {
+               display: flex;
+               gap: 14px;
+               flex-wrap: wrap;
+          }
+
+          .primary-btn,
+          .secondary-btn {
+               padding: 15px 25px;
+               border-radius: 30px;
+               font-weight: 900;
+               font-size: 14px;
+               transition: .3s;
+          }
+
+          .primary-btn {
+               background: var(--lime);
+               color: var(--navy);
+          }
+
+          .secondary-btn {
+               border: 1px solid #65708f;
+               color: white;
+          }
+
+          .primary-btn:hover,
+          .secondary-btn:hover {
+               transform: translateY(-5px);
+          }
+
+          .hero-visual {
+               position: relative;
+               display: flex;
+               justify-content: center;
+               align-items: center;
+               min-height: 430px;
+          }
+
+          .visual-circle {
+               width: 350px;
+               height: 350px;
+               border-radius: 50%;
+               background: linear-gradient(135deg, #667cff, #263da7);
+               display: grid;
+               place-items: center;
+               position: relative;
+               animation: float 5s ease-in-out infinite;
+               box-shadow: 0 0 90px rgba(82, 109, 255, .3);
+          }
+
+          .visual-circle img {
+               width: 100%;
+               height: 100%;
+               border-radius: 50%;
+               object-fit: cover;
+               border: 8px solid rgba(255, 255, 255, .12);
+          }
+
+          @keyframes float {
+
+               0%,
+               100% {
+                    transform: translateY(0);
+               }
+
+               50% {
+                    transform: translateY(-18px);
+               }
+          }
+
+          .float-card {
+               position: absolute;
+               background: white;
+               color: var(--navy);
+               border-radius: 15px;
+               padding: 13px 18px;
+               font-weight: 900;
+               box-shadow: 0 12px 35px rgba(0, 0, 0, .2);
+               animation: float 4s ease-in-out infinite;
+          }
+
+          .float-card small {
+               display: block;
+               color: #77809b;
+               font-size: 11px;
+          }
+
+          .ai-card {
+               top: 45px;
+               left: -5px;
+          }
+
+          .ball-card {
+               bottom: 35px;
+               right: -5px;
+               animation-delay: 1s;
+          }
+
+          .hero-decoration {
+               position: absolute;
+               font-size: 35px;
+               opacity: .7;
+               animation: float 4s infinite;
+          }
+
+          .star-one {
+               top: 17%;
+               right: 12%;
+          }
+
+          .star-two {
+               bottom: 12%;
+               left: 8%;
+          }
+
+          /* MARQUEE */
+
+          .marquee {
+               background: var(--lime);
+               overflow: hidden;
+               padding: 17px 0;
+               white-space: nowrap;
+          }
+
+          .marquee-track {
+               display: flex;
+               width: max-content;
+               animation: scroll 25s linear infinite;
+          }
+
+          .marquee-track span {
+               font-family: 'Outfit';
+               font-size: 17px;
+               font-weight: 900;
+               margin: 0 30px;
+               color: var(--navy);
+          }
+
+          @keyframes scroll {
+               to {
+                    transform: translateX(-50%);
+               }
+          }
+
+          /* ABOUT */
+
+          section {
+               padding: 100px 0;
+          }
+
+          .section-label {
+               color: var(--blue);
+               font-size: 12px;
+               font-weight: 900;
+               letter-spacing: 2px;
+               text-transform: uppercase;
+               margin-bottom: 12px;
+          }
+
+          .section-title {
+               font-family: 'Outfit';
+               font-size: clamp(35px, 5vw, 50px);
+               font-weight: 900;
+               line-height: 1.15;
+               margin-bottom: 18px;
+               letter-spacing: -1.5px;
+          }
+
+          .section-description {
+               color: #727d96;
+               line-height: 1.8;
+          }
+
+          .about-grid {
+               display: grid;
+               grid-template-columns: 1fr 1fr;
+               gap: 65px;
+               align-items: center;
+          }
+
+          .about-visual {
+               background: #dfe5ff;
+               border-radius: 30px;
+               min-height: 400px;
+               display: grid;
+               place-items: center;
+               position: relative;
+               overflow: hidden;
+          }
+
+          .about-visual img {
+               width: 100%;
+               height: 400px;
+               object-fit: cover;
+          }
+
+          .about-badge {
+               position: absolute;
+               bottom: 20px;
+               left: 20px;
+               background: var(--lime);
+               padding: 13px 18px;
+               border-radius: 12px;
+               font-weight: 900;
+          }
+
+          .about-tags {
+               display: flex;
+               flex-wrap: wrap;
+               gap: 10px;
+               margin-top: 25px;
+          }
+
+          .about-tags span {
+               background: white;
+               border: 1px solid #e3e7f2;
+               padding: 10px 16px;
+               border-radius: 30px;
+               font-weight: 800;
+               font-size: 13px;
+          }
+
+          /* PASSIONS */
+
+          .passions {
+               background: white;
+          }
+
+          .center-heading {
+               text-align: center;
+               max-width: 600px;
+               margin: 0 auto 50px;
+          }
+
+          .passion-grid {
+               display: grid;
+               grid-template-columns: 1fr 1fr;
+               gap: 25px;
+          }
+
+          .passion-card {
+               border-radius: 25px;
+               padding: 40px;
+               min-height: 380px;
+               position: relative;
+               overflow: hidden;
+               color: white;
+               transition: .4s;
+          }
+
+          .passion-card:hover {
+               transform: translateY(-10px);
+          }
+
+          .ai-passion {
+               background: linear-gradient(135deg, #243a9b, #526dff);
+          }
+
+          .football-passion {
+               background: linear-gradient(135deg, #15583c, #269b62);
+          }
+
+          .passion-icon {
+               font-size: 50px;
+               margin-bottom: 20px;
+          }
+
+          .passion-card h3 {
+               font-family: 'Outfit';
+               font-size: 34px;
+               font-weight: 900;
+               margin-bottom: 15px;
+          }
+
+          .passion-card p {
+               color: rgba(255, 255, 255, .85);
+               line-height: 1.8;
+               max-width: 390px;
+          }
+
+          .passion-number {
+               position: absolute;
+               right: 20px;
+               bottom: -35px;
+               font-family: 'Outfit';
+               font-size: 150px;
+               font-weight: 900;
+               opacity: .1;
+          }
+
+          /* VISION */
+
+          .vision {
+               background: var(--navy);
+               color: white;
+               text-align: center;
+          }
+
+          .vision h2 {
+               font-family: 'Outfit';
+               font-size: clamp(38px, 5vw, 60px);
+               line-height: 1.15;
+               max-width: 800px;
+               margin: auto auto 20px;
+          }
+
+          .vision h2 span {
+               color: var(--lime);
+          }
+
+          .vision p {
+               color: #b6c0d9;
+               max-width: 600px;
+               margin: auto;
+               line-height: 1.8;
+          }
+
+          /* GOALS */
+
+          .goals-grid {
+               display: grid;
+               grid-template-columns: repeat(3, 1fr);
+               gap: 20px;
+          }
+
+          .goal {
+               background: white;
+               padding: 30px;
+               border-radius: 20px;
+               border: 1px solid #e8ebf3;
+               transition: .3s;
+          }
+
+          .goal:hover {
+               transform: translateY(-7px);
+               box-shadow: 0 15px 35px rgba(20, 30, 60, .08);
+          }
+
+          .goal-icon {
+               font-size: 35px;
+               margin-bottom: 15px;
+          }
+
+          .goal h3 {
+               font-family: 'Outfit';
+               font-size: 21px;
+               margin-bottom: 10px;
+          }
+
+          .goal p {
+               font-size: 14px;
+               color: #78839a;
+               line-height: 1.8;
+          }
+
+          /* CONTACT */
+
+          .contact {
+               background: #e9edff;
+               text-align: center;
+          }
+
+          .contact h2 {
+               font-family: 'Outfit';
+               font-size: 45px;
+               margin-bottom: 15px;
+          }
+
+          .contact p {
+               color: #707b96;
+               margin-bottom: 25px;
+          }
+
+          .contact-btn {
+               display: inline-block;
+               background: var(--navy);
+               color: white;
+               padding: 15px 30px;
+               border-radius: 30px;
+               font-weight: 900;
+               transition: .3s;
+          }
+
+          .contact-btn:hover {
+               background: var(--blue);
+               transform: scale(1.05);
+          }
+
+          /* FOOTER */
+
+          footer {
+               background: var(--navy);
+               padding: 35px 0;
+               color: white;
+               text-align: center;
+          }
+
+          footer p {
+               color: #929db9;
+               font-size: 13px;
+               margin-top: 10px;
+          }
+
+          /* REVEAL ANIMATIONS */
+
+          .reveal {
+               opacity: 0;
+               transform: translateY(35px);
+               transition: opacity .8s ease, transform .8s ease;
+          }
+
+          .reveal.active {
+               opacity: 1;
+               transform: translateY(0);
+          }
+
+          /* RESPONSIVE */
+
+          @media(max-width:850px) {
+
+               .hero-content,
+               .about-grid {
+                    grid-template-columns: 1fr;
+               }
+
+               .hero {
+                    padding-top: 150px;
+               }
+
+               .hero-visual {
+                    min-height: 390px;
+               }
+
+               .passion-grid {
+                    grid-template-columns: 1fr;
+               }
+
+               .goals-grid {
+                    grid-template-columns: 1fr 1fr;
+               }
+
+               .nav-links {
+                    gap: 13px;
+                    font-size: 12px;
+               }
+          }
+
+          @media(max-width:550px) {
+               .nav-links {
+                    display: none;
+               }
+
+               .hero h1 {
+                    letter-spacing: -2px;
+               }
+
+               .visual-circle {
+                    width: 270px;
+                    height: 270px;
+               }
+
+               .float-card {
+                    font-size: 12px;
+               }
+
+               .goals-grid {
+                    grid-template-columns: 1fr;
+               }
+
+               section {
+                    padding: 75px 0;
+               }
+
+               .passion-card {
+                    padding: 30px;
+               }
+
+               .contact h2 {
+                    font-size: 34px;
+               }
+          }
+     </style>
+</head>
+
+<body>
+
+     <header id="header">
+          <div class="container">
+               <nav>
+                    <a href="#" class="logo">JAXON<span>.</span></a>
+
+                    <div class="nav-links">
+                         <a href="#home">Home</a>
+                         <a href="#about">About</a>
+                         <a href="#passions">My World</a>
+                         <a href="#vision">My Vision</a>
+                    </div>
+
+                    <a href="#contact" class="nav-button">Say Hello ↗</a>
+               </nav>
+          </div>
+     </header>
+
+     <!-- HERO -->
+
+     <section class="hero" id="home">
+          <div class="container hero-content">
+
+               <div class="reveal">
+                    <div class="status">
+                         <span class="dot"></span>
+                         DREAMING BIG. BUILDING BIGGER.
+                    </div>
+
+                    <h1>
+                         Hey, I'm Jaxon.
+                         <span>Thinker. Creator. Player.</span>
+                    </h1>
+
+                    <p class="hero-text">
+                         I'm an AI enthusiast and aspiring footballer with big
+                         ambitions, a curious mind and a passion for turning
+                         ideas into something extraordinary.
+                    </p>
+
+                    <div class="hero-buttons">
+                         <a href="#about" class="primary-btn">Discover My World →</a>
+                         <a href="#passions" class="secondary-btn">What I Love ⚡</a>
+                    </div>
+               </div>
+
+               <div class="hero-visual reveal">
+
+                    <div class="visual-circle">
+                         <img src="./imgs/portrait.jpeg"
+                              alt="Personal portrait placeholder">
+                    </div>
+
+                    <div class="float-card ai-card">
+                         🤖 AI SPECIALIST
+                         <small>Curious about the future</small>
+                    </div>
+
+                    <div class="float-card ball-card">
+                         ⚽ FOOTBALL
+                         <small>Chasing the dream</small>
+                    </div>
+
+                    <span class="hero-decoration star-one">✦</span>
+                    <span class="hero-decoration star-two">✧</span>
+
+               </div>
+
+          </div>
+     </section>
+
+     <!-- MARQUEE -->
+
+     <div class="marquee">
+          <div class="marquee-track">
+               <span>🤖 ARTIFICIAL INTELLIGENCE</span>
+               <span>⚽ FOOTBALL</span>
+               <span>💡 INNOVATION</span>
+               <span>🚀 AMBITION</span>
+               <span>🤖 ARTIFICIAL INTELLIGENCE</span>
+               <span>⚽ FOOTBALL</span>
+               <span>💡 INNOVATION</span>
+               <span>🚀 AMBITION</span>
+          </div>
+     </div>
+
+     <!-- ABOUT -->
+
+     <section id="about">
+          <div class="container about-grid">
+
+               <div class="about-visual reveal">
+                    <img src="./imgs/overshoulder.jpeg"
+                         alt="Technology and robotics">
+                    <div class="about-badge">A MIND FULL OF IDEAS 💡</div>
+               </div>
+
+               <div class="reveal">
+                    <div class="section-label">A LITTLE ABOUT ME</div>
+
+                    <h2 class="section-title">
+                         Two passions. One ambitious mind.
+                    </h2>
+
+                    <p class="section-description">
+                         I'm Jaxon, an AI Specialist and aspiring footballer.
+                         I enjoy exploring technology, understanding how things
+                         work and discovering new ways to create.
+
+                         <br><br>
+
+                         Away from technology, football is another huge part
+                         of my ambitions. I love the excitement, teamwork,
+                         discipline and determination that the game demands.
+
+                         <br><br>
+
+                         I'm still learning, growing and developing. But one
+                         thing is certain: I have big dreams, and I'm willing
+                         to work towards them.
+                    </p>
+
+                    <div class="about-tags">
+                         <span>🧠 Curious Mind</span>
+                         <span>⚡ Creative Thinker</span>
+                         <span>🎯 Goal Driven</span>
+                         <span>🚀 Future Focused</span>
+                    </div>
+               </div>
+
+          </div>
+     </section>
+
+     <!-- PASSIONS -->
+
+     <section class="passions" id="passions">
+          <div class="container">
+
+               <div class="center-heading reveal">
+                    <div class="section-label">MY WORLD</div>
+                    <h2 class="section-title">What Makes Me, Me.</h2>
+                    <p class="section-description">
+                         Two different worlds, both driven by curiosity,
+                         creativity and the desire to become better.
+                    </p>
+               </div>
+
+               <div class="passion-grid">
+
+                    <div class="passion-card ai-passion reveal">
+                         <div class="passion-icon">🤖</div>
+                         <h3>Artificial Intelligence</h3>
+                         <p>
+                              I am fascinated by how AI works and how technology
+                              can solve real-world problems. I enjoy exploring
+                              intelligent systems, automation and the future
+                              of innovation.
+                         </p>
+                         <div class="passion-number">01</div>
+                    </div>
+
+                    <div class="passion-card football-passion reveal">
+                         <div class="passion-icon">⚽</div>
+                         <h3>The Beautiful Game</h3>
+                         <p>
+                              Football is more than just a sport to me. It's about
+                              teamwork, discipline, creativity and determination.
+                              My ambition is to keep developing and make my mark
+                              on the game.
+                         </p>
+                         <div class="passion-number">02</div>
+                    </div>
+
+               </div>
+          </div>
+     </section>
+
+     <!-- VISION -->
+
+     <section class="vision" id="vision">
+          <div class="container reveal">
+               <div class="section-label" style="color:#c7ff65">
+                    THE BIGGER PICTURE
+               </div>
+
+               <h2>
+                    I'm not just interested in
+                    <span>what the future holds.</span>
+                    I want to help shape it.
+               </h2>
+
+               <p>
+                    Whether through technology or football, I want to
+                    challenge myself, keep improving and become someone
+                    whose work and achievements make a difference.
+               </p>
+          </div>
+     </section>
+
+     <!-- GOALS -->
+
+     <section>
+          <div class="container">
+
+               <div class="center-heading reveal">
+                    <div class="section-label">LOOKING AHEAD</div>
+                    <h2 class="section-title">Big Dreams. Bigger Goals.</h2>
+                    <p class="section-description">
+                         Every great journey begins with a vision
+                         and the determination to pursue it.
+                    </p>
+               </div>
+
+               <div class="goals-grid">
+
+                    <div class="goal reveal">
+                         <div class="goal-icon">🧠</div>
+                         <h3>Master AI</h3>
+                         <p>
+                              Continue learning about artificial intelligence
+                              and develop innovative ideas that can make
+                              a real difference.
+                         </p>
+                    </div>
+
+                    <div class="goal reveal">
+                         <div class="goal-icon">🏆</div>
+                         <h3>Football Excellence</h3>
+                         <p>
+                              Improve my football abilities, develop discipline
+                              and work towards becoming an outstanding player.
+                         </p>
+                    </div>
+
+                    <div class="goal reveal">
+                         <div class="goal-icon">🌍</div>
+                         <h3>Make an Impact</h3>
+                         <p>
+                              Use my interests, creativity and knowledge
+                              to contribute something meaningful to the world.
+                         </p>
+                    </div>
+
+               </div>
+          </div>
+     </section>
+
+     <!-- CONTACT -->
+
+     <section class="contact" id="contact">
+          <div class="container reveal">
+               <div class="section-label">LET'S CONNECT</div>
+
+               <h2>Every great story starts somewhere.</h2>
+
+               <p>
+                    This is just the beginning of my journey.
+                    Stay tuned for what's next!
+               </p>
+
+               <a href="mailto:YOUR_EMAIL_HERE" class="contact-btn">
+                    Get in Touch ↗
+               </a>
+          </div>
+     </section>
+
+     <!-- FOOTER -->
+
+     <footer>
+          <div class="container">
+               <a href="#" class="logo">JAXON<span>.</span></a>
+               <p>AI Specialist in the making. Footballer in pursuit. Dreamer by nature.</p>
+               <p>© 2026 Jaxon. Built with curiosity and ambition. ⚡</p>
+          </div>
+     </footer>
+
+     <script>
+          // Sticky navigation
+          window.addEventListener("scroll", () => {
+               document.getElementById("header")
+                    .classList.toggle("scrolled", window.scrollY > 50);
+          });
+
+          // Scroll reveal animation
+          const observer = new IntersectionObserver((entries) => {
+               entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                         entry.target.classList.add("active");
+                         observer.unobserve(entry.target);
+                    }
+               });
+          }, { threshold: 0.15 });
+
+          document.querySelectorAll(".reveal").forEach(element => {
+               observer.observe(element);
+          });
+     </script>
+
+</body>
+
+</html>
